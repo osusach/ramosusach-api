@@ -1,0 +1,19 @@
+{
+  "name": "ramosusach-api",
+  "scripts": {
+    "dev": "wrangler dev src/index.ts",
+    "deploy": "wrangler deploy --minify src/index.ts"
+  },
+  "dependencies": {
+    "@hono/swagger-ui": "^0.4.1",
+    "@hono/zod-openapi": "^0.16.0",
+    "@libsql/client": "^0.10.0",
+    "@tsndr/cloudflare-worker-jwt": "^2.5.3",
+    "hono": "^4.5.10",
+    "libsql": "^0.4.2-pre.3"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240529.0",
+    "wrangler": "^3.57.2"
+  }
+}
