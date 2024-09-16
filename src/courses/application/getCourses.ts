@@ -1,5 +1,5 @@
 import { Client } from "@libsql/client";
-import { course } from "../../shared/types";
+import { applicationResponse, course } from "../../shared/types";
 import { dbQuery } from "../../utils/dbQuery";
 
 export async function getCourses(
@@ -7,7 +7,7 @@ export async function getCourses(
   pageSize: number | undefined,
   page: number | undefined,
   db: Client
-): Promise<{ body: any; status: 200 | 500 }> {
+): Promise<applicationResponse> {
   let query = "SELECT * FROM course WHERE is_active = 0";
 
   if (career_id != undefined) {

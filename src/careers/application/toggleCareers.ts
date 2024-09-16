@@ -1,20 +1,20 @@
 import { z } from "@hono/zod-openapi"
 import { Client } from "@libsql/client"
-
+import { applicationResponse, career } from "../../shared/types"
+import { dbQuery } from "../../utils/dbQuery"
 
 
 export const careerToToggle = z.object({
   career_id: z.number(),
-  is_active: z.boolean()
+  is_active: z.coerce.boolean()
 })
 
 type careerToToggle = z.infer<typeof careerToToggle>
 
-export async function toggleCareers(careers: careerToToggle[], db: Client): Promise<{body: any, status: 200 | 500}> {
+export async function toggleCareers(careers: careerToToggle[], db: Client): Promise<applicationResponse> {
+  const careersToActivate = careers.filter(e => e.is_active === true)
+  const careersToDeactivate = careers.filter(e => e.is_active === false)
   try {
-    const careersToActivate = careers.filter(e => e.is_active === true)
-    const careersToDeactivate = careers.filter(e => e.is_active === false)
-  
     if (careersToActivate.length > 0) {
       const activateIds = `(${careersToActivate.map(e => e.career_id).join(", ")})`
       const activateQuery = [`UPDATE career SET is_active = 1 WHERE id IN ${activateIds};`,
@@ -40,13 +40,23 @@ export async function toggleCareers(careers: careerToToggle[], db: Client): Prom
     }
   }
 
-  
+  const ids = `(${careers.map(e => e.career_id).join(", ")})`
+  const updatedCareersQuery = `SELECT * FROM course WHERE id IN ${ids}`
+  const updatedCareers = await dbQuery(updatedCareersQuery, career, db);
 
+  if (!updatedCareers.success) {
+    return {
+      status: 500,
+      body: {
+        message: "Error while obtaining the updated careers"
+      }
+    }
+  }
 
   return {
     status: 200,
     body: {
-      success: true
+      careers: updatedCareers
     }
   }
   

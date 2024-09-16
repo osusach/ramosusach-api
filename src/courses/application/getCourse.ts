@@ -1,7 +1,7 @@
 import { Client } from "@libsql/client";
 import { dbQuery } from "../../utils/dbQuery";
 import { z } from "@hono/zod-openapi";
-import { course } from "../../shared/types";
+import { applicationResponse, course } from "../../shared/types";
 
 export const stats_schema = z.object({
   course_id: z.number(),
@@ -26,7 +26,7 @@ export const full_course = course.and(
 export async function getCourse(
   course_id: number,
   db: Client
-): Promise<{ body: any; status: 200 | 500 }> {
+): Promise<applicationResponse> {
   const difficulty_query = `SELECT course_id, difficulty_score score, count(difficulty_score) as votes FROM course_vote WHERE course_id = ${course_id} GROUP BY course_id, difficulty_score ORDER BY difficulty_score ASC;`;
   const time_query = `SELECT course_id, time_demand_score score, count(time_demand_score) as votes FROM course_vote WHERE course_id = ${course_id} GROUP BY course_id, time_demand_score ORDER BY time_demand_score`;
 
@@ -60,6 +60,13 @@ export async function getCourse(
       },
       status: 500,
     };
+  }
+
+  if (course_response.data.length === 0) {
+    return {
+      body: null,
+      status: 404
+    }
   }
 
   return {

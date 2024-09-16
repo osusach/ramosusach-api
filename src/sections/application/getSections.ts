@@ -1,5 +1,5 @@
 import { Client } from "@libsql/client";
-import { course, section, teacher } from "../../shared/types";
+import { applicationResponse, course, section, teacher } from "../../shared/types";
 import { dbQuery } from "../../utils/dbQuery";
 import { z } from "@hono/zod-openapi";
 
@@ -24,7 +24,7 @@ export async function getSections(
   page_size: number | undefined,
   page: number | undefined,
   db: Client
-): Promise<{ body: any; status: 200 | 500 }> {
+): Promise<applicationResponse> {
   let query = `SELECT * FROM section S`;
   let constraints: string[] = [];
 

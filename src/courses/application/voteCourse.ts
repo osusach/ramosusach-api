@@ -2,7 +2,7 @@ import { Client } from "@libsql/client";
 import { validateJWT } from "../../shared/validateJWT";
 import { z } from "@hono/zod-openapi";
 import { dbQuery } from "../../utils/dbQuery";
-import { course } from "../../shared/types";
+import { course, applicationResponse } from "../../shared/types";
 
 export const voteBody = z.object({
   course_id: z.number(),
@@ -13,13 +13,14 @@ export const voteBody = z.object({
 type vote = z.infer<typeof voteBody>
 
 
-export async function voteCourse(token: string | undefined, vote: vote, env: Bindings, db: Client): Promise<{body: any, status: 200 | 500}> {
+export async function voteCourse(token: string | undefined, vote: vote, env: Bindings, db: Client): Promise<applicationResponse> {
   const validation = await validateJWT(token, env)
   if (!validation.is_valid) {
     return {
       body: {
         message: "You must send a valid jwt"
       },
+      // Gotta change
       status: 500
     }
   }

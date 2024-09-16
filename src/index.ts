@@ -43,10 +43,6 @@ app.route('/courseComments', courseCommentsApp)
 
 app.get('/ui', swaggerUI({url: '/doc'}))
 
-
-
-
-
 app.doc('/doc', {
   openapi: '3.0.0',
   info: {

@@ -1,17 +1,18 @@
 import { Client } from "@libsql/client";
 import { validateJWT } from "../../shared/validateJWT";
 import { dbQuery } from "../../utils/dbQuery";
-import { course_vote } from "../../shared/types";
+import { course_vote, applicationResponse } from "../../shared/types";
 
 
 
-export async function canVote(token: string | undefined, course_id: number, env: Bindings, db: Client): Promise<{body: any, status: 200 | 500}> {
+export async function canVote(token: string | undefined, course_id: number, env: Bindings, db: Client): Promise<applicationResponse> {
   const validation = await validateJWT(token, env)
   if (!validation.is_valid) {
     return {
       body: {
         message: "You must send a valid token"
       },
+      // Gotta change
       status: 500
     }
   }

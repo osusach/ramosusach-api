@@ -1,6 +1,6 @@
 import jwt  from "@tsndr/cloudflare-worker-jwt"
 
-type userJWT = {
+interface userJWT {
   id: number,
   is_admin: boolean,
   sub: string

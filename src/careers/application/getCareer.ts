@@ -1,5 +1,5 @@
 import { Client } from "@libsql/client";
-import { career, course, teacher } from "../../shared/types";
+import { applicationResponse, career, course, teacher } from "../../shared/types";
 import { dbQuery } from "../../utils/dbQuery";
 import { z } from "@hono/zod-openapi";
 
@@ -13,12 +13,12 @@ export const career_with_courses = career.and(z.object({
 
 
 
-export async function getCareer(career_id: number, db: Client): Promise<{body: any, status: 200 | 500}> {
+export async function getCareer(career_id: number, db: Client): Promise<applicationResponse> {
   
   const career_query = `SELECT * FROM career WHERE career.id = ${career_id}`
 
-  const teachers = await dbQuery(career_query, career, db)
-  if (!teachers.success) {
+  const careerRes = await dbQuery(career_query, career, db)
+  if (!careerRes.success) {
     return {
       status: 500,
       body: {
@@ -27,6 +27,16 @@ export async function getCareer(career_id: number, db: Client): Promise<{body: a
       }
     }
   }
+  if (careerRes.data.length === 0) {
+    return {
+      status: 404,
+      body: null
+    }
+  }
+
+
+
+
   const courses_query = `SELECT CC.level level, C.* FROM career_course CC INNER JOIN course C ON C.id = CC.course_id WHERE CC.career_id = ${career_id}`
   const courses = await dbQuery(courses_query, course_with_level, db)
   if (!courses.success) {
@@ -44,7 +54,7 @@ export async function getCareer(career_id: number, db: Client): Promise<{body: a
     status: 200,
     body: {
       careers: {
-        ... teachers.data[0],
+        ... careerRes.data[0],
         imparted_courses: courses.data
       }
     }

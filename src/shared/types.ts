@@ -60,7 +60,7 @@ export const user = z.object({
   sub: z.string(),
   name: z.string(),
   profile_img: z.string(),
-  is_admin: z.boolean(),
+  is_admin: z.coerce.boolean(),
   creation_date: z.coerce.date(),
   modification_date: z.coerce.date()
 })
@@ -73,7 +73,7 @@ export const jwtContents = z.object({
   iss: z.string(),
   aud: z.string().or(z.string().array()),
   id: z.number(),
-  is_admin: z.boolean(),
+  is_admin: z.coerce.boolean(),
   sub: z.string()
 })
 
@@ -102,7 +102,7 @@ export const course_comment_vote = z.object({
   id: z.number(),
   comment_id: z.number(),
   user_id: z.number(),
-  is_upvote: z.boolean()
+  is_upvote: z.coerce.boolean()
 })
 
 
@@ -110,4 +110,19 @@ export const errorMessage = z.object({
   message: z.string()
 })
 
+export type applicationResponse = {
+  status: typeof available_status_codes[number],
+  body: any
+} 
+const available_status_codes = [
+  200,
+  201,
+  204,
+  304,
+  400,
+  401,
+  403,
+  404,
+  500,
+] as const
 

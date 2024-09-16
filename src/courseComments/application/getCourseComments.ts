@@ -3,14 +3,15 @@ import { validateJWT } from "../../shared/validateJWT";
 import { dbQuery } from "../../utils/dbQuery";
 import { course_comment } from "../../shared/types";
 import { z } from "@hono/zod-openapi";
+import { applicationResponse } from "../../shared/types";
 
 export const vote_checked_comment = course_comment.and(z.object({
-  is_already_voted: z.boolean(),
+  is_already_voted: z.coerce.boolean(),
   user_name: z.string(),
   user_profile_img: z.string()
 }))
 
-export async function getCourseComments(course_id: number, parent_id: number | undefined, page: number, page_size: number, token: string | undefined, env: Bindings, db: Client): Promise<{body: any, status: 200 | 500}> {
+export async function getCourseComments(course_id: number, parent_id: number | undefined, page: number, page_size: number, token: string | undefined, env: Bindings, db: Client): Promise<applicationResponse> {
   const validation = await validateJWT(token, env)
   if (!validation.is_valid) {
     return {

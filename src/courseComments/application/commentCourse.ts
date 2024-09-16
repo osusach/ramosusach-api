@@ -1,6 +1,7 @@
 import { Client } from "@libsql/client"
 import { z } from "@hono/zod-openapi"
 import { validateJWT } from "../../shared/validateJWT"
+import { applicationResponse } from "../../shared/types"
 
 export const incomplete_comment = z.object({
   course_id: z.number(),
@@ -11,13 +12,14 @@ export const incomplete_comment = z.object({
 type incomplete_comment = z.infer<typeof incomplete_comment>
 
 
-export async function commentCourse(comment: incomplete_comment, header: string | undefined, env: Bindings, db: Client): Promise<{body: any, status: 200 | 500}> {
+export async function commentCourse(comment: incomplete_comment, header: string | undefined, env: Bindings, db: Client): Promise<applicationResponse> {
   const validation = await validateJWT(header, env)
   if (!validation.is_valid) {
     return {
       body: {
         message: "Send a valid jwt"
       },
+      // Gotta change
       status: 500
     }
   }

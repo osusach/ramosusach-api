@@ -1,7 +1,7 @@
 import { Client, ResultSet } from "@libsql/client";
 import { validateJWT } from "../../shared/validateJWT";
 import { dbQuery } from "../../utils/dbQuery";
-import { course_comment_vote } from "../../shared/types";
+import { course_comment_vote, applicationResponse } from "../../shared/types";
 import { z } from "@hono/zod-openapi";
 
 export const comment_vote = z.object({
@@ -16,7 +16,7 @@ export async function voteComment(
   header: string | undefined,
   env: Bindings,
   db: Client
-): Promise<{body: any, status: 200 | 500}>  {
+): Promise<applicationResponse>  {
   const validation = await validateJWT(header, env);
   if (!validation.is_valid) {
     return {

@@ -1,5 +1,5 @@
 import { Client } from "@libsql/client";
-import { career, course, teacher } from "../../shared/types";
+import { career, course, teacher, applicationResponse } from "../../shared/types";
 import { dbQuery } from "../../utils/dbQuery";
 import { z } from "@hono/zod-openapi";
 export const section_with_course = z.object({
@@ -13,7 +13,7 @@ export const teacher_with_courses = teacher.and(z.object({
 
 
 
-export async function getTeacher(teacher_id: number, db: Client): Promise<{body: any, status: 200 | 500}> {
+export async function getTeacher(teacher_id: number, db: Client): Promise<applicationResponse> {
   
   let query = "SELECT * FROM teacher"
   const teachers_query = `SELECT * FROM teacher WHERE teacher.id = ${teacher_id}`
@@ -27,6 +27,13 @@ export async function getTeacher(teacher_id: number, db: Client): Promise<{body:
         message: 
           "Error obteniendo los profesores desde la base de datos"
       }
+    }
+  }
+
+  if (teachers.data.length === 0) {
+    return {
+      status: 404,
+      body: null
     }
   }
   const imparted_courses_query = `SELECT TS.section_id section_id, S.code section_code, C.* FROM (((teacher_section TS INNER JOIN teacher T ON TS.teacher_id = T.id) INNER JOIN section S ON S.id = TS.section_id) INNER JOIN course C ON C.id = S.course_id) WHERE T.id = ${teacher_id};`
