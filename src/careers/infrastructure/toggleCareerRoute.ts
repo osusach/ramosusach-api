@@ -1,8 +1,9 @@
 import { z } from "@hono/zod-openapi"
 import { createRoute, OpenAPIHono } from "@hono/zod-openapi"
 import { career_with_courses } from "../application/getCareer"
-import { errorMessage } from "../../shared/types"
+import { career, errorMessage } from "../../shared/types"
 import { careerToToggle } from "../application/toggleCareers"
+import { commonResponses } from "../../shared/commonResponses"
 
 
 const example = [{section_id: 4013, is_active: false} ]
@@ -51,18 +52,13 @@ export const toggleCareersRoute = createRoute({
     200: {
       content: {
         "application/json": {
-          schema: career_with_courses
+          schema: {
+            careers: career.array()
+          }
         }
       },
       description: "Toggles the careers between is_active = true and is_active = false. Admin use only"
     },
-    500: {
-      content: {
-        "application/json": {
-          schema: errorMessage
-        }
-      },
-      description: "Internal server error"
-    }
+    ... commonResponses
   }
 })

@@ -1,5 +1,6 @@
 import { createRoute } from "@hono/zod-openapi"
 import { faculty, errorMessage } from "../../shared/types"
+import { commonResponses } from "../../shared/commonResponses"
 
 
 export const getFacultiesRoute = createRoute({
@@ -15,14 +16,7 @@ export const getFacultiesRoute = createRoute({
 
       description: "Obtains all faculties available"
     },
-    500: {
-      content: {
-        "application/json": {
-          schema: errorMessage
-        }
-      },
-      description: "Internal server error"
-    }
+    ... commonResponses
   }
 
 })

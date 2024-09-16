@@ -2,6 +2,7 @@ import { z } from "@hono/zod-openapi"
 import { createRoute } from "@hono/zod-openapi"
 import { errorMessage } from "../../shared/types"
 import { voteBody } from "../application/voteCourse"
+import { commonResponses } from "../../shared/commonResponses"
 
 
 export const voteCourseRoute = createRoute({
@@ -27,14 +28,7 @@ export const voteCourseRoute = createRoute({
 
       description: "Sends a vote for the course"
     },
-    500: {
-      content: {
-        "application/json": {
-          schema: errorMessage
-        }
-      },
-      description: "Internal server error"
-    }
+    ... commonResponses
   }
 
 })

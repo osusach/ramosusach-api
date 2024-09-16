@@ -2,6 +2,7 @@ import { z } from "@hono/zod-openapi"
 import { createRoute } from "@hono/zod-openapi"
 import { section_with_course, teacher_with_courses } from "../application/getTeacher"
 import { errorMessage } from "../../shared/types"
+import { commonResponses } from "../../shared/commonResponses"
 const paramsSchema = z.object({
   teacher_id: z.coerce.number().openapi({
     param: {
@@ -31,13 +32,6 @@ export const getTeacherRoute = createRoute({
       },
       description: "Information about the teacher and the courses they impart"
     },
-    500: {
-      content: {
-        "application/json": {
-          schema: errorMessage
-        }
-      },
-      description: "Internal server error"
-    }
+    ... commonResponses
   }
 })

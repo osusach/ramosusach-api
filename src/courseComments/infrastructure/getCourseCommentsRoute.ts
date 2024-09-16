@@ -2,6 +2,7 @@ import { z } from "@hono/zod-openapi";
 import { createRoute } from "@hono/zod-openapi";
 import { errorMessage } from "../../shared/types";
 import { incomplete_comment } from "../application/commentCourse";
+import { commonResponses } from "../../shared/commonResponses";
 
 const paramsSchema = z.object({
   course_id: z.coerce.number().openapi({
@@ -63,13 +64,6 @@ export const getCourseCommentsRoute = createRoute({
 
       description: "Obtains comments from a course or replies from a comment",
     },
-    500: {
-      content: {
-        "application/json": {
-          schema: errorMessage,
-        },
-      },
-      description: "Internal server error",
-    },
+    ... commonResponses
   },
 });

@@ -1,6 +1,7 @@
 import { z } from "@hono/zod-openapi"
 import { createRoute } from "@hono/zod-openapi"
 import { errorMessage } from "../../shared/types"
+import { commonResponses } from "../../shared/commonResponses"
 const paramsSchema = z.object({
   course_id: z.coerce.number().openapi({
     param: {
@@ -26,21 +27,14 @@ export const canVoteRoute = createRoute({
       content: {
         "application/json": {
           schema: z.object({
-            can_vote: z.boolean()
+            can_vote: z.coerce.boolean()
           })
         }
       },
 
       description: "Checks if the user can or can not vote for the course"
     },
-    500: {
-      content: {
-        "application/json": {
-          schema: errorMessage
-        }
-      },
-      description: "Internal server error"
-    }
+    ... commonResponses
   }
 
 })

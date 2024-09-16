@@ -1,6 +1,7 @@
 import { z } from "@hono/zod-openapi";
 import { createRoute } from "@hono/zod-openapi";
 import { course, errorMessage } from "../../shared/types";
+import { commonResponses } from "../../shared/commonResponses";
 
 const paramsSchema = z.object({
   career_id: z.coerce
@@ -13,7 +14,7 @@ const paramsSchema = z.object({
         required: false,
         description: "id of the career the courses are present",
       },
-      example: 13303,
+      example: 1463,
     }),
   page: z.coerce
     .number()
@@ -39,7 +40,7 @@ const paramsSchema = z.object({
         description:
           "Number of elements accessed in every page, starting from 1 (one)",
       },
-      example: 1,
+      example: 20,
     }),
 });
 
@@ -61,13 +62,6 @@ export const getCoursesRoute = createRoute({
 
       description: "Obtains all courses available",
     },
-    500: {
-      content: {
-        "application/json": {
-          schema: errorMessage,
-        },
-      },
-      description: "Internal server error",
-    },
+    ... commonResponses
   },
 });
