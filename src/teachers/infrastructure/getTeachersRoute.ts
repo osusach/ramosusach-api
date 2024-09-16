@@ -11,7 +11,7 @@ const paramsSchema = z.object({
       required: false,
       description: "id of the course the teachers impart",
     },
-    example: 13303
+    example: 13308
   }),
   page: z.coerce.number().optional().openapi({
     param: {

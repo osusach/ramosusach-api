@@ -12,7 +12,7 @@ const paramsSchema = z.object({
       required: false,
       description: "id of the course the sections are from",
     },
-    example: 13303
+    example: 13308
   }),
   career_id: z.coerce.number().optional().openapi({
     param: {

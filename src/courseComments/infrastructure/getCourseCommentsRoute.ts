@@ -12,7 +12,7 @@ const paramsSchema = z.object({
       required: true,
       description: "id of the course the comments are for",
     },
-    example: 13303,
+    example: 13308,
   }),
   parent_id: z.coerce.number().optional().openapi({
     param: {
@@ -43,7 +43,7 @@ const paramsSchema = z.object({
         description:
           "Number of elements accessed in every page, starting from 1 (one)",
       },
-      example: 10,
+      example: 20,
     }),
 });
 

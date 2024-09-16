@@ -40,6 +40,6 @@ export async function commentCourse(comment: incomplete_comment, header: string 
 
   return {
     body: null,
-    status: 200
+    status: 201
   }
 }

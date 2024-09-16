@@ -10,7 +10,7 @@ const paramsSchema = z.object({
       required: true,
       description: "id of the course you want to check you can vote for",
     },
-    example: 13303
+    example: 13308
   })
 
 })

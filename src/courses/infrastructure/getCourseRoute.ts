@@ -12,7 +12,7 @@ const paramsSchema = z.object({
       required: false,
       description: "id of the course you want to search",
     },
-    example: 13303,
+    example: 13308,
   }),
 });
 
