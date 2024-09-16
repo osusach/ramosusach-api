@@ -4,7 +4,7 @@ import { dbQuery } from "../../utils/dbQuery";
 
 
 export async function getCareers(faculty_id: number | undefined, pageSize: number | undefined, page: number | undefined, db: Client): Promise<applicationResponse> {
-  let query = "SELECT * FROM career WHERE is_active = 0"
+  let query = "SELECT * FROM career WHERE is_active = 1"
 
   if (faculty_id) {
     query += ` AND faculty_id = ${faculty_id}`

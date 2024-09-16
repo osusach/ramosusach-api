@@ -8,7 +8,7 @@ export async function getCourses(
   page: number | undefined,
   db: Client
 ): Promise<applicationResponse> {
-  let query = "SELECT * FROM course WHERE is_active = 0";
+  let query = "SELECT * FROM course WHERE is_active = 1";
 
   if (career_id != undefined) {
     query = `SELECT C.* FROM course C INNER JOIN career_course CC ON CC.course_id = C.id WHERE C.is_active = 0 AND CC.career_id = ${career_id}`;
