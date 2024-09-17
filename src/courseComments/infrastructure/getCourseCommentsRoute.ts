@@ -3,6 +3,7 @@ import { createRoute } from "@hono/zod-openapi";
 import { errorMessage } from "../../shared/types";
 import { incomplete_comment } from "../application/commentCourse";
 import { commonResponses } from "../../shared/commonResponses";
+import { vote_checked_comment } from "../application/getCourseComments";
 
 const paramsSchema = z.object({
   course_id: z.coerce.number().openapi({
@@ -58,7 +59,9 @@ export const getCourseCommentsRoute = createRoute({
     200: {
       content: {
         "application/json": {
-          schema: z.null(),
+          schema: z.object({
+            comments: vote_checked_comment
+          }),
         },
       },
 
