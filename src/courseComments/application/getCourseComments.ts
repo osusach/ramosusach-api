@@ -26,14 +26,15 @@ export async function getCourseComments(course_id: number, parent_id: number | u
 
   
 
-  let query = `SELECT CC.*, (CCV.id != NULL) as is_already_voted, U.name as user_name, U.profile_img as user_profile_img FROM (course_comment CC LEFT JOIN course_comment_vote CCV ON CCV.comment_id = CC.id AND CCV.user_id = ${id}) INNER JOIN user U ON U.id = CC.user_id WHERE course_id = ${course_id}`
+  let query = `SELECT CC.*, (CCV.id != NULL) as is_already_voted, U.name as user_name, U.profile_img as user_profile_img FROM ((course_comment CC LEFT JOIN course_comment_vote CCV ON CCV.comment_id = CC.id AND CCV.user_id = ${id}) INNER JOIN user U ON U.id = CC.user_id) WHERE course_id = ${course_id}`
   if (parent_id != undefined) {
-    query += `AND parent_id = ${parent_id}`
+    query += ` AND parent_id = ${parent_id}`
   }
-  query += `LIMIT ${page_size} OFFSET ${page_size * page};`
+  query += ` LIMIT ${page_size} OFFSET ${page_size * page};`
   const comments = await dbQuery(query, vote_checked_comment, db);
   if (!comments.success) {
     console.log(comments.error)
+    console.log(query)
     return {
       body: {
         message: "Error obteniendo los comentarios desde la base de datos"

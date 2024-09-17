@@ -188,7 +188,7 @@ CREATE TABLE course_comment_vote (
 );
 
 CREATE INDEX course_comment_vote_comment_id_index ON course_comment_vote(comment_id);
-CREATE INDEX course_comment_user_id_index ON course_comment_vote(user_id);
-CREATE INDEX course_comment_comment_id_user_id_index ON course_comment_vote(comment_id, user_id);
+CREATE INDEX course_comment_vote_user_id_index ON course_comment_vote(user_id);
+CREATE INDEX course_comment_vote_comment_id_user_id_index ON course_comment_vote(comment_id, user_id);
 
 
