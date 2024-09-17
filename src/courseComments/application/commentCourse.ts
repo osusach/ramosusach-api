@@ -25,7 +25,7 @@ export async function commentCourse(comment: incomplete_comment, header: string 
   }
   const user_data = validation.data
 
-  const query = `INSERT INTO comment_course (course_id, user_id, parent_id, content) VALUES (?, ?, ?, ?);`
+  const query = `INSERT INTO course_comment (course_id, user_id, parent_id, content) VALUES (?, ?, ?, ?);`
   const res = await db.execute({sql: query,
     args: [comment.course_id, user_data.id, comment.parent_id, comment.content]
   })
