@@ -90,7 +90,7 @@ export const course_comment = z.object({
   id: z.number(),
   course_id: z.number(),
   user_id: z.number(),
-  parent_id: z.number(),
+  parent_id: z.number().nullable(),
   reply_count: z.number(),
   content: z.string(),
   upvotes: z.number(),
