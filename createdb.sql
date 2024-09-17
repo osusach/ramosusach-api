@@ -163,13 +163,13 @@ CREATE TABLE course_comment (
   course_id INTEGER NOT NULL,
   user_id INTEGER NOT NULL,
   parent_id INTEGER,
+  content TEXT NOT NULL,
   reply_count INTEGER NOT NULL DEFAULT 0,
   upvotes INTEGER NOT NULL DEFAULT 0,
   creation_date TEXT NOT NULL DEFAULT current_timestamp,
   modification_date TEXT NOT NULL DEFAULT current_timestamp,
   FOREIGN KEY (course_id) REFERENCES course(id),
-  FOREIGN KEY (user_id) REFERENCES user(id),
-  FOREIGN KEY (parent_id) REFERENCES course_comment(parent_id)
+  FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
 CREATE INDEX course_comment_course_id_index ON course_comment(course_id);
