@@ -7,6 +7,8 @@ import { getCourseCommentsRoute } from "./getCourseCommentsRoute";
 import { getCourseComments } from "../application/getCourseComments";
 import { voteCommentRoute } from "./voteCommentRoute";
 import { voteComment } from "../application/voteComment";
+import { deleteCommentRoute } from "./deleteCommentRoute";
+import { deleteComment } from "../application/deleteComment";
 
 const courseCommentsApp = new OpenAPIHono<{ Bindings: Bindings }>();
 
@@ -42,5 +44,13 @@ courseCommentsApp.openapi(voteCommentRoute, async (c) => {
   const response = await voteComment(vote, token, c.env, db);
   return c.json(response.body, response.status);
 });
+
+courseCommentsApp.openapi(deleteCommentRoute, async (c) => {
+  const db = sqlClient(c.env);
+  const auth = c.req.header("Authorization");
+  const { comment_id } = c.req.valid("param")
+  const response = await deleteComment(comment_id, auth, c.env, db)
+  return c.json(response.body, response.status)
+})
 
 export default courseCommentsApp;
