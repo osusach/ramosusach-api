@@ -31,6 +31,7 @@ const paramsSchema = z.object({
   page_size: z.coerce
     .number()
     .min(1)
+    .max(200)
     .optional()
     .openapi({
       param: {
