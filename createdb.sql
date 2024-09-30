@@ -45,6 +45,7 @@ CREATE TABLE course (
 );
 
 CREATE INDEX course_id_index ON course(id);
+CREATE INDEX course_is_active_index ON course(is_active);
 CREATE INDEX course_id_is_active_index ON course(id, is_active);
 
 
@@ -168,8 +169,8 @@ CREATE TABLE course_comment (
   upvotes INTEGER NOT NULL DEFAULT 0,
   creation_date TEXT NOT NULL DEFAULT current_timestamp,
   modification_date TEXT NOT NULL DEFAULT current_timestamp,
-  FOREIGN KEY (course_id) REFERENCES course(id),
-  FOREIGN KEY (user_id) REFERENCES user(id)
+  FOREIGN KEY (course_id) REFERENCES course(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
 CREATE INDEX course_comment_course_id_index ON course_comment(course_id);
@@ -184,7 +185,7 @@ CREATE TABLE course_comment_vote (
   user_id INTEGER NOT NULL,
   is_upvote TINYINT NOT NULL DEFAULT 1,
   UNIQUE(comment_id, user_id),
-  FOREIGN KEY (comment_id) REFERENCES course_comment(id)
+  FOREIGN KEY (comment_id) REFERENCES course_comment(id) ON DELETE CASCADE
 );
 
 CREATE INDEX course_comment_vote_comment_id_index ON course_comment_vote(comment_id);
@@ -192,3 +193,34 @@ CREATE INDEX course_comment_vote_user_id_index ON course_comment_vote(user_id);
 CREATE INDEX course_comment_vote_comment_id_user_id_index ON course_comment_vote(comment_id, user_id);
 
 
+CREATE TABLE course_count (
+  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  is_active TINYINT NOT NULL,
+  count INTEGER NOT NULL DEFAULT 0
+);
+
+INSERT INTO course_count (is_active) VALUES (0), (1);
+
+CREATE INDEX course_count_is_active_index ON course_count(is_active);
+
+CREATE TRIGGER update_on_insert_course_count
+AFTER INSERT
+ON course
+BEGIN
+  UPDATE course_count
+  SET count = totals.item_count FROM (
+    SELECT is_active, count(is_active) as item_count FROM course GROUP BY is_active
+  ) as totals
+  WHERE totals.is_active = course.is_active;
+END;
+
+CREATE TRIGGER update_on_update_course_count
+AFTER UPDATE OF is_active
+ON course
+BEGIN
+  UPDATE course_count
+  SET count = totals.item_count FROM (
+    SELECT is_active, count(is_active) as item_count FROM course GROUP BY is_active
+  ) as totals
+  WHERE totals.is_active = course.is_active;
+END;
