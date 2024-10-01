@@ -8,7 +8,8 @@ import { applicationResponse } from "../../shared/types";
 export const vote_checked_comment = course_comment.and(z.object({
   is_already_voted: z.coerce.boolean(),
   user_name: z.string(),
-  user_profile_img: z.string()
+  user_profile_img: z.string(),
+  is_author: z.coerce.boolean()
 }))
 
 export async function getCourseComments(course_id: number, parent_id: number | undefined, page: number, page_size: number, token: string | undefined, env: Bindings, db: Client): Promise<applicationResponse> {
@@ -26,7 +27,14 @@ export async function getCourseComments(course_id: number, parent_id: number | u
 
   
 
-  let query = `SELECT CC.*, (CCV.id != NULL) as is_already_voted, U.name as user_name, U.profile_img as user_profile_img FROM ((course_comment CC LEFT JOIN course_comment_vote CCV ON CCV.comment_id = CC.id AND CCV.user_id = ${id}) INNER JOIN user U ON U.id = CC.user_id) WHERE course_id = ${course_id}`
+  let query = `SELECT CC.*,
+               (CCV.id != NULL) as is_already_voted,
+               U.name as user_name,
+               U.profile_img as user_profile_img,
+               (CC.user_id = ${id}) as is_author
+               FROM (
+               (course_comment CC LEFT JOIN course_comment_vote CCV ON CCV.comment_id = CC.id AND CCV.user_id = ${id})
+               INNER JOIN user U ON U.id = CC.user_id) WHERE course_id = ${course_id}`
   if (parent_id != undefined) {
     query += ` AND parent_id = ${parent_id}`
   }
